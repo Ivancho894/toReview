@@ -28,8 +28,8 @@ let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].s
 sequelize.models = Object.fromEntries(capsEntries);
 const { Tarea, User } = sequelize.models;
 
-Tarea.belongsTo(User,{through: "tareas_usuario"});
-User.belongsToMany(Tarea, {through: "tareas_usuario"});
+User.belongsToMany(Tarea, { through: 'tareas_usuario', foreignKey: 'tareaId' });
+Tarea.belongsTo(User, { through: 'tareas_usuario', foreignKey: 'userId' });
 
 module.exports = {
   ...sequelize.models,
