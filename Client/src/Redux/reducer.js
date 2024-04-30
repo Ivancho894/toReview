@@ -9,7 +9,6 @@ const initialState = {
 export default function(state = initialState, action){
     switch(action.type){
         case 'GET_ALL_TASKS':
-            console.log(action.payload, 'kkkkkk')
             return {
                 ...state,
                 allTasks : action.payload
@@ -26,8 +25,9 @@ export default function(state = initialState, action){
             }
         case 'GET_USER_BY_ID':
             const allUsers = state.allUsers
-            console.log(action.payload,'2')
-            const user = allUsers.map(user => user.id == action.payload)
+            console.log(action.payload,allUsers,'2')
+            const user = allUsers.filter(user => user.id == action.payload)[0]
+            console.log(user, '3')
             return {
                 ...state,
                 userById : user
@@ -35,7 +35,7 @@ export default function(state = initialState, action){
         case 'GET_TASKS_BY_USER_ID':
             const allTasks = state.allTasks
             const id = action.payload * 1
-            const tasks = allTasks.map(task => task.userId == id)
+            const tasks = allTasks.filter(task => task.userId == id)
             return {
                 ...state,
                 tasksByUserId : tasks
@@ -46,7 +46,11 @@ export default function(state = initialState, action){
                 allTasks : action.payload
             }
         
-
+        case 'UPDATE_TASK_STATE':
+            return {
+                ...state,
+                allTasks : action.payload
+            }
 
         default:
             return state;

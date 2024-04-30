@@ -50,5 +50,4 @@ export function GET_TASKS_BY_USER_ID(id){
 export function GET_BY_USER_ID(id){
     return {type: 'GET_USER_BY_ID', payload: id}
 
-
 }

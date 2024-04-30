@@ -1,47 +1,51 @@
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { GET_BY_USER_ID, GET_TASKS_BY_USER_ID } from '../Redux/actions';
 
-import { useNavigate, useParams } from "react-router-dom"
-import { useEffect, useState } from "react";
-import { GET_TASKS_BY_USER_ID,GET_BY_USER_ID } from '../Redux/actions';
+export default function User() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { id } = useParams();
 
+    useEffect(() => {
+        dispatch(GET_BY_USER_ID(id));
+        dispatch(GET_TASKS_BY_USER_ID(id));
+    }, [dispatch, id]);
 
-export default function User(){
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const {id} = useParams();
-    const [user,setUser] =useState({name:""})
-    const [tasks,setTasks] =useState([])
-    
-    console.log(id*1)
-    useEffect(()=>{
-        dispatch(GET_BY_USER_ID(id*1))
-        dispatch(GET_TASKS_BY_USER_ID(id*1))
-    },[])
-    const tasksByUserId = useSelector(state=>state.tasksByUserId)
-    const userById = useSelector(state=>state.userById)
-    setTasks(tasksByUserId)
-    setUser(userById)
+    const handleState = (e) => {
+        dispatch(GET_TASKS_BY_USER_ID(id));
+    }
 
-    console.log(tasks,user)
+    const tasksByUserId = useSelector(state => state.tasksByUserId);
+    const userById = useSelector(state => state.userById);
 
-    return(
-        <div>
-            <h1>User</h1>
-            <h3>{user?.name}</h3>
-            {tasks?.map(task=>{
-                return(
-                    <div>
-                        <h4>{task?.name}</h4>
-                        <h4>{task?.description}</h4>
-                    </div>
-                )
-                })}
-            
+    return (
+        <div class='tareas'>
+            <h1>User: {userById.name}</h1>
 
-            <button onClick={()=>navigate('/tarea/create')}>Crear</button>
-            <button onClick={()=>navigate('/tarea/1/edit')}>Editar</button>
-            <button onClick={()=>navigate('/tarea/1')}>Editar</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tasksByUserId.map(task => (
+                        <tr key={task.id}>
+                            <td>{task.name}</td>
+                            <td>{task.description}</td>
+                            <td><input type="checkbox" id={task.id} value={task.state}/></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            <button onClick={() => navigate('/tarea/create')}>Crear</button>
+            <button onClick={() => navigate(`/tarea/${id}/edit`)}>Editar</button>
+            <button onClick={() => navigate(`/tarea/${id}`)}>Ver</button>
         </div>
-    )
+    );
 }
